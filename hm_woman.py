@@ -19,12 +19,13 @@ api1_data = api1_data.json()
 api2_data = api2_data.json()
 api3_data = api3_data.json()
 
-def download(url):                     
-                          
-    jpg = requests.get(url,headers=headers)           
-    f = open(route, 'wb')    
-    f.write(jpg.content)                 
-    f.close()
+
+
+
+def download(url, route):                     
+    jpg = requests.get(url, headers=headers)           
+    with open(route, 'wb') as f:
+        f.write(jpg.content)
 
 
 data_list =[]
@@ -37,55 +38,54 @@ for each_api in all_api:
     for each_data in each_api:
 
         try:
-            each_url = f'https://www2.hm.com'+each_data['swatches'][0]['articleLink']
+            each_url = f'https://www2.hm.com'+str(each_data['swatches'][0]['articleLink'])
             print(f' {name_number} url ok')        
         except:
             each_url = 'None'
-            print(f' {name_number} url fail')
+            print(f' {name_number} url error')
         
         contail_url.append(each_url)
 
         try:
             title = each_data['title']
-            print(f' {name_number} url ok')        
+            print(f' {name_number} title ok')        
 
         except:
             title = 'None'
-            print(f' {name_number} url ok')        
+            print(f' {name_number} title error')        
 
 
 
         try:
             price = each_data['price']
-            print(f' {name_number} url ok')
+            print(f' {name_number} price ok')
 
         except:
             price = 'None'
-            print(f' {name_number} url ok')
+            print(f' {name_number} price error')
 
 
         try:
             color = each_data['swatches'][0]['colorName']
-            print(f' {name_number} url ok')
+            print(f' {name_number} color ok')
         except:
             color = 'None'
-            print(f' {name_number} url ok')
+            print(f' {name_number} color error')
         
-        
-        
-        try:
-            photo = 'https:'+each_data['image'][0]['dataAltImage']
-            download(photo)
-            print(f' {name_number} url ok')
-        except:
-            photo = 'None'
-            print(f' {name_number} url ok')
-
         
         route = f'image/hm/woman/{name_number}.jpg'
-        name_number = name_number +1
-        data_list.append([title,price,color,route])
+        try:
+            photo = 'https:'+str(each_data['image'][0]['dataAltImage'])
+            download(photo,route)
+            print(f' {name_number} download ok')
+        except:
+            photo = 'None'
+            print(f' {name_number} download error')
 
+        
+
+        data_list.append([title,price,color,route])
+        name_number = name_number +1
 
     for each_contail in contail_url:
 
